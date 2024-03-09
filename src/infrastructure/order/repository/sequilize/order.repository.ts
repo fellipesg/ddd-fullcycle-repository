@@ -32,21 +32,18 @@ export default class OrderRepository implements OrderRepositoryInterface {
   async update(entity: Order): Promise<void> {
     await OrderModel.update(
       {
-        customer_id: entity.customerId,
+        id: entity.id,
+        customerId: entity.customerId,
         total: entity.total(),
         items: entity.items.map((item) => ({
           id: item.id,
           name: item.name,
           price: item.price,
-          product_id: item.productId,
+          productId: item.productId,
           quantity: item.quantity,
         })),
       },
-      {
-        where: {
-          id: entity.id,
-        },
-      }
+      { where: { id: entity.id } }
     );
   }
 

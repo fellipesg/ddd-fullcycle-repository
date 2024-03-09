@@ -162,4 +162,58 @@ describe("Order repository test", () => {
     expect(orders).toContainEqual(order);
     expect(orders).toContainEqual(order);
   });
+
+  it("should update an order", async () => {
+    const customerRepository = new CustomerRepository();
+    const productRepository = new ProductRepository();
+    const orderRepository = new OrderRepository();
+    const customer = new Customer("123", "Customer 1");
+    const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
+    customer.changeAddress(address);
+    await customerRepository.create(customer);
+    const product = new Product("123", "Product 1", 10);
+    await productRepository.create(product);
+    const orderItem = new OrderItem(
+      "1",
+      product.name,
+      product.price,
+      product.id,
+      2
+    );
+    const order = new Order("123", "123", [orderItem]);
+    await orderRepository.create(order);
+    product.changeName("Product new name");
+    product.changePrice(20);
+    order.items = [
+      new OrderItem(
+        "1",
+        product.name,
+        product.price,
+        product.id,
+        3
+      )
+    ];
+    await orderRepository.update(order);
+
+    const orderModel = await OrderModel.findOne({
+      where: { id: order.id },
+      include: [{ model: OrderItemModel }],
+    });
+
+    expect(orderModel.toJSON()).toStrictEqual({
+      id: "123",
+      customer_id: "123",
+      total: order.total(),
+      items: [
+        {
+          id: orderItem.id,
+          name: orderItem.name,
+          price: orderItem.price,
+          quantity: orderItem.quantity,
+          order_id: "123",
+          product_id: "123",
+        },
+      ],
+    });
+  });
 });

@@ -24,6 +24,9 @@ export default class Order {
   get items(): OrderItem[] {
     return this._items;
   }
+  set items(items: OrderItem[]) {
+    this._items = items
+  }
 
   validate(): boolean {
     if (this._id.length === 0) {
