@@ -107,7 +107,6 @@ describe("Order repository test", () => {
     
 
     const orderResult = await orderRepository.find(order.id);
-    console.log('Test', { orderResult });
     expect(order).toStrictEqual(orderResult);
   });
 
