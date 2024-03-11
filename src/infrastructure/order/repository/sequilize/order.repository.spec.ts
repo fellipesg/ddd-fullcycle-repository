@@ -184,6 +184,7 @@ describe("Order repository test", () => {
     await orderRepository.create(order);
     product.changeName("Product new name");
     product.changePrice(20);
+    await productRepository.update(product);
     order.items = [
       new OrderItem(
         "1",
@@ -207,9 +208,9 @@ describe("Order repository test", () => {
       items: [
         {
           id: orderItem.id,
-          name: orderItem.name,
-          price: orderItem.price,
-          quantity: orderItem.quantity,
+          name: product.name,
+          price: product.price,
+          quantity: 3,
           order_id: "123",
           product_id: "123",
         },
